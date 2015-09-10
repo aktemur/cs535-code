@@ -36,24 +36,30 @@ class Philosopher extends Thread {
 
     public void run() {
         while(true) {
-            think();
-            leftStick.take();
-            System.out.println(this + " acquired " + leftStick + ".");
-            rightStick.take();
-            System.out.println(this + " acquired " + rightStick + ".");
-            eat();
-            leftStick.put();
-            System.out.println(this + " released " + leftStick + ".");
-            rightStick.put();
-            System.out.println(this + " released " + rightStick + ".");
+            try{
+                think();
+                leftStick.take();
+                System.out.println(this + " acquired " + leftStick + ".");
+                rightStick.take();
+                System.out.println(this + " acquired " + rightStick + ".");
+                eat();
+                leftStick.put();
+                System.out.println(this + " released " + leftStick + ".");
+                rightStick.put();
+                System.out.println(this + " released " + rightStick + ".");
+            } catch(InterruptedException e) {
+                return;
+            }
         }
     }
 
-    private void think() {
+    private void think() throws InterruptedException {
+        sleep(500);
         System.out.println(this + " is thinking...");
     }
 
-    private void eat() {
+    private void eat() throws InterruptedException {
+        sleep(200);
         System.out.println(this + " is eating.");
     }
 
