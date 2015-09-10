@@ -14,25 +14,26 @@
  */
 public class HelloWorld {
   
-  public static void main(String[] args) throws InterruptedException {
-    Thread[] thread = new Thread[8];
-    // create threads
-    for (int i = 0; i < thread.length; i++) {
-      final String message = "Hello world from thread " + i;
-      thread[i] = new Thread(new Runnable() {
-        public void run() {
-          System.out.println(message);
+    public static void main(String[] args) throws InterruptedException {
+        Thread[] threads = new Thread[8];
+        // create threads
+        for (int i = 0; i < threads.length; i++) {
+            final String message = "Hello world from thread " + i;
+            // You can directly subclass Thread instead of using a Runnable.
+            threads[i] = new Thread() {
+                    public void run() {
+                        System.out.println(message);
+                    }
+                };
         }
-      });
-    }
-    // start threads
-    for (int i = 0; i < thread.length; i++) {
-      thread[i].start();
-    }
-    // wait for them to finish
-    for (int i = 0; i < thread.length; i++) {
-      thread[i].join();
-    }
-    System.out.println("done!");
-  }  
+        // start threads
+        for (Thread thread : threads) {
+            thread.start();
+        }
+        // wait for them to finish
+        for (Thread thread : threads) {
+            thread.join();
+        }
+        System.out.println("done!");
+    }  
 }
