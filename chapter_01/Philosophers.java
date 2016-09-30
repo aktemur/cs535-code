@@ -1,18 +1,20 @@
 class Chopstick {
     private int id;
     private boolean isTaken;
-
+    
     public Chopstick(int id) {
         this.id = id;
         this.isTaken = false;
     }
 
-    public void take() {
+    public void take(Philosopher taker) {
         isTaken = true;
+        System.out.println(taker + " took " + this + ".");
     }
 
-    public void put() {
+    public void put(Philosopher taker) {
         isTaken = false;
+        System.out.println(taker + " put " + this + ".");
     }
 
     public boolean isTaken() {
@@ -38,15 +40,13 @@ class Philosopher extends Thread {
         while(true) {
             try{
                 think();
-                leftStick.take();
-                System.out.println(this + " acquired " + leftStick + ".");
-                rightStick.take();
-                System.out.println(this + " acquired " + rightStick + ".");
+                leftStick.take(this);
+                rightStick.take(this);
+
                 eat();
-                leftStick.put();
-                System.out.println(this + " released " + leftStick + ".");
-                rightStick.put();
-                System.out.println(this + " released " + rightStick + ".");
+
+                leftStick.put(this);
+                rightStick.put(this);
             } catch(InterruptedException e) {
                 return;
             }
