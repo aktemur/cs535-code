@@ -7,14 +7,20 @@ class Chopstick {
         this.isTaken = false;
     }
 
-    public void take(Philosopher taker) {
+    public synchronized void take(Philosopher taker) throws InterruptedException {
+        while (isTaken) {
+            wait();
+        }
         isTaken = true;
         System.out.println(taker + " took " + this + ".");
     }
 
-    public void put(Philosopher taker) {
+    public synchronized void put(Philosopher taker) {
         isTaken = false;
         System.out.println(taker + " put " + this + ".");
+        notify();
+        // In this case, notify() is the same as notifyAll(),
+        // because there can be at most one Philosopher waiting.
     }
 
     public boolean isTaken() {
@@ -40,8 +46,13 @@ class Philosopher extends Thread {
         while(true) {
             try{
                 think();
-                leftStick.take(this);
-                rightStick.take(this);
+                if (id % 2 == 0) {
+                    leftStick.take(this);
+                    rightStick.take(this);
+                } else {
+                    rightStick.take(this);
+                    leftStick.take(this);
+                }                    
 
                 eat();
 
